@@ -1,0 +1,93 @@
+.product-dialog:has(.ecommerce-cases) > h2 { display: none; }
+.ecommerce-cases { width: min(1640px, 94vw); margin: auto; }
+.ecommerce-back { position: absolute; top: 32px; left: 40px; background: transparent; color: #ffffff9c; padding: 12px 0; font-size: 13px; }
+.ecommerce-back:hover { color: #fff; }
+.ecommerce-layout { animation: ecommerce-enter .45s cubic-bezier(.22,1,.36,1) both; display: grid; grid-template-columns: minmax(180px, .75fr) minmax(0, 3.4fr); align-items: center; gap: clamp(24px, 3vw, 56px); }
+@font-face {
+  font-family: 'Rany Bold';
+  src: url('/fonts/Rany-Bold.otf') format('opentype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+.content-background.site-glow .ecommerce-eyebrow { font-family: 'Rany Bold', sans-serif; font-weight: 700; font-size: 11px; color: #a5b4a8; letter-spacing: .1em; }
+.product-dialog .ecommerce-intro h2 { display: block; text-align: left; font-size: clamp(28px, 3.3vw, 54px); line-height: 1.2; margin: 20px 0 18px; letter-spacing: -.03em; }
+.ecommerce-intro p { font-size: 13px; line-height: 1.9; color: #9da7a2; }
+.ecommerce-images { display: grid; grid-template-columns: 1fr 2.4fr; gap: clamp(12px, 1.5vw, 24px); align-items: start; }
+.ecommerce-images figure { margin: 0; min-width: 0; overflow: hidden; border-radius: 20px; background: #14221b; box-shadow: 0 24px 60px #0004; }
+.ecommerce-case-open { display: block; padding: 0; min-width: 0; overflow: hidden; border-radius: 20px; background: #14221b; box-shadow: 0 24px 60px #0004; }
+.ecommerce-case-open { transform: translateY(0) scale(1); transition: transform .3s cubic-bezier(.22,1,.36,1); }
+@media (hover: hover) and (pointer: fine) {
+  .ecommerce-slide.is-active .ecommerce-case-open:hover { transform: translateY(-10px) scale(1.03); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ecommerce-case-open { transition: none; }
+}
+.ecommerce-cases[hidden] { display: none; }
+.ecommerce-square { aspect-ratio: 1; }
+.ecommerce-wide { aspect-ratio: 2.4; }
+.ecommerce-images img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.ecommerce-square img { object-position: 68% center; }
+.ecommerce-wide img { object-position: center 65%; }
+@keyframes ecommerce-enter { from { opacity: 0; transform: translateY(22px) scale(.97); } to { opacity: 1; transform: none; } }
+@media(max-width:1000px) { .ecommerce-layout { grid-template-columns: 1fr; gap: 30px; } .product-dialog .ecommerce-intro h2 br { display: none; } .product-dialog .ecommerce-intro h2 { font-size: 32px; margin: 12px 0; } .ecommerce-intro p br { display: none; } }
+@media(max-width:600px) { .ecommerce-cases { padding: 30px 20px; width: 100%; } .ecommerce-back { left: 20px; top: 18px; } .ecommerce-images { grid-template-columns: 1fr; gap: 18px; } .ecommerce-square { width: 62%; } .ecommerce-images figure, .ecommerce-case-open { border-radius: 16px; } .product-dialog .ecommerce-intro h2 { font-size: 28px; } }
+@media(prefers-reduced-motion:reduce) { .ecommerce-layout { animation: none; } }
+
+
+/* Five vertically snapping pages within a centered 1200px composition. */
+.product-dialog:has(.ecommerce-cases) { overflow: hidden; padding: 0; }
+.ecommerce-cases { width: 100%; height: 100%; margin: 0; padding: 0; }
+.ecommerce-back { z-index: 5; }
+.ecommerce-viewport { position: absolute; inset: 90px 0 50px; overflow-y: auto; overflow-x: hidden; scroll-snap-type: y mandatory; overscroll-behavior: contain; scrollbar-width: none; cursor: grab; user-select: none; }
+.ecommerce-viewport::-webkit-scrollbar { display: none; }
+.ecommerce-viewport.is-dragging { cursor: grabbing; }
+.ecommerce-slide { height: 100%; min-height: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; align-items: center; justify-content: center; padding: 20px 64px; }
+.ecommerce-layout { width: min(1200px, 100%); grid-template-columns: minmax(150px, .75fr) minmax(0, 3.4fr); gap: 32px; animation: none; }
+.product-dialog .ecommerce-intro h2 { font-size: clamp(26px, 2.6vw, 40px); }
+.ecommerce-images { gap: 18px; }
+.ecommerce-images img { pointer-events: none; }
+.ecommerce-pagination { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center; }
+.ecommerce-pagination button { width: 28px; height: 26px; background: transparent; display: grid; place-items: center; padding: 0; }
+.ecommerce-pagination button span { width: 8px; height: 8px; background: #ffffff38; border-radius: 12px; transition: height .3s ease, background .3s ease; }
+.ecommerce-pagination button.is-active { height: 40px; }
+.ecommerce-pagination button.is-active span { height: 26px; background: #f0f2e9; }
+.ecommerce-pagination button:hover span { background: #ffffffa6; }
+@media(max-width:1000px) { .ecommerce-layout { grid-template-columns: 1fr; gap: 24px; } }
+@media(max-width:600px) {
+  .ecommerce-slide { padding: 16px 44px 16px 20px; }
+  .ecommerce-layout { gap: 16px; }
+  .ecommerce-images { gap: 14px; }
+  .ecommerce-square { width: 52%; }
+  .product-dialog .ecommerce-intro h2 { font-size: 25px; margin: 8px 0; }
+  .ecommerce-intro p { font-size: 12px; }
+  .ecommerce-pagination { right: 7px; }
+  .ecommerce-viewport { top: 74px; bottom: 40px; }
+}
+@media(prefers-reduced-motion:reduce) { .ecommerce-pagination button span { transition: none; } }
+/* A tighter vertical stack keeps neighboring cases visible behind the focus. */
+.ecommerce-viewport { --case-height: clamp(280px, 42dvh, 420px); display: flex; flex-direction: column; gap: 32px; scroll-snap-type: y mandatory; }
+.ecommerce-viewport::before, .ecommerce-viewport::after { content: ''; display: block; height: calc((100% - var(--case-height)) / 2 - 32px); flex-shrink: 0; pointer-events: none; }
+.ecommerce-slide { flex: 0 0 var(--case-height); height: var(--case-height); min-height: 0; scroll-snap-align: center; padding-block: 12px; }
+.ecommerce-slide .ecommerce-layout { opacity: .28; filter: blur(7px); transform: scale(.96); transition: opacity .4s ease, filter .4s ease, transform .4s ease; }
+.ecommerce-slide.is-active .ecommerce-layout { opacity: 1; filter: blur(0); transform: scale(1); }
+.ecommerce-pagination button { height: 18px; }
+.ecommerce-pagination button span { width: 9px; height: 9px; }
+.ecommerce-pagination button.is-active { height: 34px; }
+.ecommerce-pagination button.is-active span { height: 28px; }
+@media(max-width:1000px) { .ecommerce-viewport { --case-height: clamp(360px, 58dvh, 540px); } }
+@media(max-width:600px) { .ecommerce-viewport { --case-height: clamp(390px, 64dvh, 560px); } .ecommerce-slide .ecommerce-layout { filter: blur(5px); } .ecommerce-slide.is-active .ecommerce-layout { filter: none; } }
+@media(prefers-reduced-motion:reduce) { .ecommerce-slide .ecommerce-layout { transition: none; } }
+/* Light snapping lets trackpad and touch scrolling flow between cases. */
+.ecommerce-viewport { scroll-snap-type: y proximity; }
+.ecommerce-slide { scroll-snap-stop: normal; }
+.ecommerce-slide .ecommerce-layout { transition: opacity .25s ease, filter .25s ease, transform .25s ease; }
+.ecommerce-cases { animation: ecommerce-layer-in .36s ease both; }
+.ecommerce-cases .ecommerce-viewport { animation: ecommerce-content-in .42s cubic-bezier(.22,1,.36,1) both; }
+.ecommerce-cases.is-closing { animation: ecommerce-layer-out .26s ease both; pointer-events: none; }
+.ecommerce-cases.is-closing .ecommerce-viewport { animation: ecommerce-content-out .26s cubic-bezier(.4,0,1,1) both; }
+@keyframes ecommerce-layer-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ecommerce-layer-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes ecommerce-content-in { from { transform: translateY(18px) scale(.97); } to { transform: translateY(0) scale(1); } }
+@keyframes ecommerce-content-out { from { transform: translateY(0) scale(1); } to { transform: translateY(16px) scale(.97); } }
+@media(prefers-reduced-motion:reduce) { .ecommerce-cases, .ecommerce-cases .ecommerce-viewport, .ecommerce-cases.is-closing, .ecommerce-cases.is-closing .ecommerce-viewport { animation: none; } .ecommerce-slide .ecommerce-layout { transition: none; } }

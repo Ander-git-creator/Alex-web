@@ -1,0 +1,27 @@
+const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
+const fs = require('node:fs');
+(async () => {
+  fs.mkdirSync('artifacts',{recursive:true});
+  const browser = await chromium.launch({channel:'chrome',headless:true});
+  const page = await browser.newPage({viewport:{width:1600,height:1000},deviceScaleFactor:1});
+  const errors=[]; page.on('pageerror', e => errors.push(e.message));
+  await page.goto('http://127.0.0.1:5173/',{waitUntil:'networkidle'});
+  await page.screenshot({path:'artifacts/desktop.png',fullPage:true});
+  const initial = await page.evaluate(() => ({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,canvas:!!document.querySelector('.circular-gallery canvas'),videoReady:document.querySelector('video').readyState,videoPaused:document.querySelector('video').paused}));
+  await page.getByRole('button',{name:'暂停背景视频'}).click();
+  const paused = await page.locator('video').evaluate(v=>v.paused);
+  await page.getByRole('button',{name:/01 \/ PRODUCT/}).click();
+  const dialogOpen = await page.locator('dialog').evaluate(d=>d.open);
+  await page.keyboard.press('Escape');
+  const dialogClosed = await page.locator('dialog').evaluate(d=>!d.open);
+  await page.locator('.contact-link').click();
+  await page.waitForTimeout(800);
+  await page.getByRole('button',{name:/微信/}).click();
+  const contact = await page.getByRole('status').innerText();
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('http://127.0.0.1:5173/',{waitUntil:'networkidle'});
+  await page.screenshot({path:'artifacts/mobile.png',fullPage:true});
+  const mobile = await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth}));
+  console.log(JSON.stringify({initial,paused,dialogOpen,dialogClosed,contact,mobile,errors},null,2));
+  await browser.close();
+})();

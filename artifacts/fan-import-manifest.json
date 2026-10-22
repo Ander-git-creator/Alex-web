@@ -1,0 +1,58 @@
+[
+  {
+    "source": "D:\\作品整理\\手持风扇\\主图A+\\1-首图.png",
+    "output": "square-01.webp",
+    "size": [
+      1200,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\手持风扇\\主图A+\\2-20000rpm.png",
+    "output": "square-02.webp",
+    "size": [
+      1200,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\手持风扇\\主图A+\\100.png",
+    "output": "square-03.webp",
+    "size": [
+      1200,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\手持风扇\\主图A+\\风力.png",
+    "output": "square-04.webp",
+    "size": [
+      1200,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\手持风扇\\主图A+\\续航.png",
+    "output": "square-05.webp",
+    "size": [
+      1200,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\手持风扇\\主图A+\\size.png",
+    "output": "square-06.webp",
+    "size": [
+      1200,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\手持风扇\\主图A+\\1464 A+.png",
+    "output": "wide-01.webp",
+    "size": [
+      1464,
+      4800
+    ]
+  }
+]

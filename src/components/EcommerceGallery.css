@@ -1,0 +1,20 @@
+.ecommerce-gallery { position: absolute; inset: 0; animation: ecommerce-layer-in .36s ease both; }
+.ecommerce-gallery-back { position: absolute; top: 32px; left: 40px; z-index: 5; padding: 12px 0; background: transparent; color: #ffffff9c; font-size: 13px; }
+.ecommerce-gallery-back:hover { color: #fff; }
+.ecommerce-gallery-viewport { position: absolute; inset: 90px 64px 50px; overflow-y: auto; overflow-x: hidden; scroll-snap-type: y mandatory; overscroll-behavior: contain; scrollbar-width: none; touch-action: pan-y; cursor: grab; display: flex; flex-direction: column; --gallery-step: 360px; }
+.ecommerce-gallery-viewport::before, .ecommerce-gallery-viewport::after { content: ''; display: block; flex: 0 0 calc((100% - var(--gallery-step)) / 2); pointer-events: none; }
+.ecommerce-gallery-viewport::-webkit-scrollbar { display: none; }
+.ecommerce-gallery-viewport:active { cursor: grabbing; }
+.ecommerce-gallery-slide { position: relative; flex: 0 0 var(--gallery-step); height: var(--gallery-step); scroll-snap-align: center; display: flex; align-items: center; justify-content: center; perspective: 1400px; }
+.ecommerce-gallery-image { display: block; flex-shrink: 0; width: var(--gallery-card-width); height: var(--gallery-card-height); border-radius: 20px; border: 0; padding: 0; overflow: hidden; background: #14221b; cursor: grab; backface-visibility: hidden; will-change: transform; box-shadow: 0 24px 60px #0008; transform-origin: center; }
+.ecommerce-gallery-image img { display: block; width: 100%; height: 100%; object-fit: cover; user-select: none; }
+.ecommerce-gallery-image:has(.ecommerce-gallery-placeholder) { cursor: grab; }
+.ecommerce-gallery-placeholder { display: block; width: 100%; height: 100%; background: linear-gradient(145deg, #1c2925, #111a18); }
+.ecommerce-gallery-pagination { max-height: calc(100% - 180px); overflow-y: auto; scrollbar-width: none; }
+@media(max-width:600px) {
+  .ecommerce-gallery-back { left: 20px; top: 18px; }
+  .ecommerce-gallery-viewport { inset: 74px 36px 40px 12px; }
+  .ecommerce-gallery-image { border-radius: 14px; }
+}
+@media(prefers-reduced-motion:reduce) { .ecommerce-gallery { animation: none; } }
+

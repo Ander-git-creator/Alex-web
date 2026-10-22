@@ -1,0 +1,21 @@
+const { chromium } = require(process.env.PLAYWRIGHT_PATH);
+(async()=>{
+ const browser=await chromium.launch({channel:'chrome',headless:true});
+ const page=await browser.newPage({viewport:{width:1600,height:1000}});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:5173/',{waitUntil:'networkidle'});
+ const widths=await page.evaluate(()=>['.navigation','.works'].map(s=>{const r=document.querySelector(s).getBoundingClientRect();return {selector:s,width:r.width,left:r.left};}));
+ const card=page.locator('.project-card').first();
+ await card.scrollIntoViewIfNeeded();await page.mouse.move(10,500);await page.waitForTimeout(900);
+ const before=await card.evaluate(el=>getComputedStyle(el,'::before').backgroundPosition);
+ await card.hover();await page.waitForTimeout(300);
+ const during=await card.evaluate(el=>({position:getComputedStyle(el,'::before').backgroundPosition,zIndex:getComputedStyle(el,'::before').zIndex,pointerEvents:getComputedStyle(el,'::before').pointerEvents}));
+ await page.screenshot({path:'artifacts/glare-hover.png'});
+ await page.waitForTimeout(850);
+ const after=await card.evaluate(el=>getComputedStyle(el,'::before').backgroundPosition);
+ await card.click();const opens=await page.locator('dialog').evaluate(d=>d.open);await page.keyboard.press('Escape');
+ await page.setViewportSize({width:390,height:844});
+ const mobile=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,navWidth:document.querySelector('.navigation').getBoundingClientRect().width,worksWidth:document.querySelector('.works').getBoundingClientRect().width}));
+ console.log(JSON.stringify({widths,cards:await page.locator('.project-card.glare-hover').count(),before,during,after,opens,mobile,errors},null,2));
+ await browser.close();
+})();

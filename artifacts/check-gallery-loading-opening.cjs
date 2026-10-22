@@ -1,0 +1,92 @@
+const { chromium } = require('C:/Users/xfcha/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+
+(async () => {
+  const browser = await chromium.launch({ channel: 'chrome', headless: true });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  // Hold the opening font: the first letter must stay at its initial pose.
+  let releaseFont;
+  const fontGate = new Promise(resolve => { releaseFont = resolve; });
+  await page.route('**/fonts/Rany-Medium.otf', async route => { await fontGate; await route.continue(); });
+  await page.goto('http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('.portfolio-root[data-opening="playing"]');
+  const initial = await page.locator('.opening-char').first().evaluate(e => e.style.transform);
+  await page.waitForTimeout(250);
+  assert.equal(await page.locator('.opening-char').first().evaluate(e => e.style.transform), initial);
+  assert.equal(await page.locator('.hero-gallery canvas').count(), 0);
+  assert.equal(await page.locator('.grainient-viewport canvas').count(), 0);
+  releaseFont();
+  await page.waitForTimeout(750);
+  await page.screenshot({ path: 'artifacts/opening-font-ready.png' });
+  await page.waitForFunction(() => document.querySelector('.portfolio-root').dataset.opening === 'complete');
+  await page.waitForSelector('.hero-gallery canvas');
+  console.log('opening waits for font and defers WebGL initialization');
+
+  const requests = new Set();
+  let releaseImages;
+  let imageGate = new Promise(resolve => { releaseImages = resolve; });
+  let failImages = false;
+  await page.route('**/assets/render-works/*', async route => {
+    requests.add(route.request().url());
+    await imageGate;
+    if (failImages) await route.abort();
+    else await route.continue();
+  });
+  async function openRender() {
+    await page.locator('#works .project-card').first().click();
+    await page.getByRole('button', { name: '切换到三维渲染', exact: true }).click();
+    await page.getByRole('button', { name: '选择三维渲染', exact: true }).click();
+    await page.waitForSelector('.render-carousel-stage[data-load-state="loading"]');
+  }
+  await openRender();
+  await page.waitForTimeout(300);
+  assert.equal(await page.getByRole('status').filter({ hasText: '正在加载作品' }).count(), 1);
+  assert(requests.size > 0 && requests.size <= 3, 'bounded image concurrency');
+  await page.screenshot({ path: 'artifacts/render-gallery-loading.png' });
+  releaseImages();
+  await page.waitForSelector('.render-carousel-stage[data-load-state="ready"]');
+  assert(requests.size < 20, `loads nearby works rather than the full album: ${requests.size}`);
+  await page.waitForTimeout(1600);
+  await page.screenshot({ path: 'artifacts/render-gallery-loaded.png' });
+  await page.locator('.render-gallery [data-gallery-list] button').first().focus();
+  await page.keyboard.press('Enter');
+  await page.waitForSelector('.render-gallery .circular-gallery[data-open]');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('.render-gallery .circular-gallery:not([data-open])');
+  console.log('loader paints, image concurrency is bounded, gallery opens and closes', requests.size);
+  await page.getByRole('button', { name: '返回分类', exact: true }).click();
+  await page.getByRole('button', { name: '选择三维渲染', exact: true }).waitFor();
+  failImages = true;
+  await page.getByRole('button', { name: '选择三维渲染', exact: true }).click();
+  await page.waitForSelector('.render-carousel-stage[data-load-state="error"]');
+  failImages = false;
+  await page.getByRole('button', { name: '重新加载', exact: true }).click();
+  await page.waitForSelector('.render-carousel-stage[data-load-state="ready"]');
+  console.log('failed images produce retry, and retry recovers');
+  await page.getByRole('button', { name: '返回分类', exact: true }).click();
+  await page.getByRole('button', { name: '选择三维渲染', exact: true }).waitFor();
+  imageGate = new Promise(resolve => { releaseImages = resolve; });
+  await page.getByRole('button', { name: '选择三维渲染', exact: true }).click();
+  await page.waitForSelector('.render-carousel-stage[data-load-state="loading"]');
+  await page.getByRole('button', { name: '返回分类', exact: true }).click();
+  releaseImages();
+  await page.getByRole('button', { name: '关闭作品详情', exact: true }).click();
+  await page.waitForTimeout(350);
+  console.log('leaving during loading works');
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('http://127.0.0.1:5173/#works');
+  await page.evaluate(() => document.fonts.ready);
+  await openRender();
+  await page.waitForSelector('.render-carousel-stage[data-load-state="ready"]');
+  await page.screenshot({ path: 'artifacts/render-gallery-loaded-mobile.png' });
+  assert.equal(await page.locator('.opening-curtain').evaluate(e => getComputedStyle(e).display), 'none');
+  assert.deepEqual(errors, []);
+  console.log('mobile, reduced motion, no browser errors passed');
+  fs.writeFileSync('artifacts/gallery-loading-validation.json', JSON.stringify({ requestedImages: requests.size, errors }, null, 2));
+  await browser.close();
+})().catch(error => { console.error(error); process.exit(1); });

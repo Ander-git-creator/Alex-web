@@ -1,0 +1,108 @@
+/* Fullscreen category overview and shared project dialog transitions. */
+.project-dialog.product-dialog {
+  position: fixed; inset: 0; margin: 0;
+  width: 100%; max-width: none; height: 100dvh; max-height: none;
+  padding: clamp(28px, 5vh, 60px) 24px 28px;
+  border: 0; border-radius: 0; box-shadow: none;
+  background: linear-gradient(145deg, #07100dc9, #080b0fbd);
+  backdrop-filter: blur(28px) saturate(.65);
+  -webkit-backdrop-filter: blur(28px) saturate(.65);
+  overflow-x: hidden;
+}
+.product-dialog::backdrop { background: #03060566; backdrop-filter: blur(22px); }
+.product-dialog[open] { display: flex; flex-direction: column; justify-content: center; }
+.product-dialog .dialog-close { position: fixed; top: 24px; right: 30px; width: 44px; height: 44px; font-size: 28px; color: #ffffffab; border: 1px solid #ffffff18; border-radius: 50%; background: #ffffff05; z-index: 10; }
+.product-dialog .dialog-close:hover { color: #fff; background: #ffffff10; }
+.product-dialog h2 { flex-shrink: 0; text-align: center; font-size: clamp(20px, 2vw, 28px); font-weight: 500; margin: 0 0 24px; letter-spacing: .02em; }
+/* A heading with the same pill treatment as the AI category filters. */
+.product-dialog:has(> .product-carousel) > h2 {
+  align-self: center; display: inline-flex; align-items: center; justify-content: center;
+  min-width: 132px; min-height: 48px; padding: 12px 24px; margin: 0 0 28px;
+  border-radius: 999px; background: var(--lime); color: #101700;
+  font-size: 14px; font-weight: 600; line-height: 1.4; letter-spacing: normal;
+}
+.product-carousel {
+  --cover-height: min(56dvh, 500px, 45vw);
+  width: min(1200px, calc(100vw - 80px)); margin-inline: auto; outline: none;
+}
+/* Reintroduce the entire overview together after a detail page fades out. */
+.product-carousel.is-returning,
+.product-dialog:has(> .product-carousel.is-returning) > h2 {
+  animation: category-return-in .36s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes category-return-in {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.product-carousel-stage {
+  position: relative; height: calc(var(--cover-height) + 110px);
+  perspective: 1400px; touch-action: pan-y; cursor: grab; user-select: none;
+}
+.product-carousel-stage.is-dragging { cursor: grabbing; }
+.product-carousel-slot {
+  position: absolute; top: 24px; left: 50%;
+  height: var(--cover-height); width: calc(var(--cover-height) * .73);
+  transform-style: preserve-3d; transform-origin: 50% 85%;
+  transition: transform .3s cubic-bezier(.22,1,.36,1);
+}
+.slot-center { transform: translateX(calc(-50% + var(--drag-offset, 0px) + var(--hover-shift, 0px))) translateZ(36px); z-index: 3; }
+.slot-left { transform: translateX(calc(-122% + var(--drag-offset, 0px) + var(--hover-shift, 0px))) translateY(18px) rotateZ(-7deg) rotateY(-12deg) scale(.94); z-index: 1; }
+.slot-right { transform: translateX(calc(22% + var(--drag-offset, 0px) + var(--hover-shift, 0px))) translateY(18px) rotateZ(7deg) rotateY(12deg) scale(.94); z-index: 1; }
+.product-category-card {
+  width: 100%; height: 100%; padding: 0; background: #1a221e;
+  overflow: hidden; border: 0; border-radius: 20px;
+  box-shadow: 0 24px 60px #0007; opacity: .88;
+  transform: translateY(0) scale(1);
+  transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .3s cubic-bezier(.22,1,.36,1);
+}
+.slot-center .product-category-card { opacity: 1; box-shadow: 0 30px 70px #0009; }
+.product-category-card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+/* Keep the fan geometry fixed; hover only transforms the covers and their slots. */
+@media (hover: hover) and (pointer: fine) {
+  .product-carousel-stage:not(.is-dragging) .slot-center .product-category-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    opacity: 1;
+  }
+  .product-carousel-stage:not(.is-dragging):has(.slot-center .product-category-card:hover) .slot-left {
+    --hover-shift: -24px;
+  }
+  .product-carousel-stage:not(.is-dragging):has(.slot-center .product-category-card:hover) .slot-right {
+    --hover-shift: 24px;
+  }
+}
+.product-category-card:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
+.product-category-caption { position: absolute; top: calc(100% + 24px); width: 100%; text-align: center; color: #fff; font-size: 19px; animation: category-caption .4s ease both; }
+.product-carousel-controls { display: flex; position: relative; align-items: center; justify-content: center; gap: 0; margin: 0 auto; width: 100%; }
+.product-carousel-controls .carousel-dot { border: 0; background: transparent; width: 24px; height: 32px; border-radius: 0; padding: 0; display: grid; place-items: center; transition: width .3s ease; }
+.carousel-dot span { display: block; width: 8px; height: 8px; border-radius: 20px; background: #ffffff40; transition: width .3s ease, background .3s ease; }
+.product-carousel-controls .carousel-dot.is-active { width: 42px; }
+.carousel-dot.is-active span { width: 28px; background: #fff; }
+.carousel-dot:hover span { background: #ffffffb3; }
+.carousel-dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.carousel-live { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; }
+@keyframes category-caption { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.project-dialog[open] { animation: project-panel-in .42s cubic-bezier(.22,1,.36,1) both; transform-origin: 50% 55%; }
+.project-dialog[open]::backdrop { animation: project-backdrop-in .42s ease both; }
+.project-dialog[open].is-closing { animation: project-panel-out .28s cubic-bezier(.4,0,1,1) both; pointer-events: none; }
+.project-dialog[open].is-closing::backdrop { animation: project-backdrop-out .28s ease both; }
+@keyframes project-panel-in { from { opacity: 0; transform: translateY(24px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes project-panel-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(20px) scale(.96); } }
+@keyframes project-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes project-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@media(max-width:760px) {
+  .project-dialog.product-dialog { padding: 76px 0 24px; }
+  .product-dialog .dialog-close { top: 16px; right: 16px; }
+  .product-dialog:has(> .product-carousel) > h2 { margin-bottom: 20px; }
+  .product-carousel { --cover-height: min(48dvh, 360px, 73vw); width: 100%; }
+  .slot-left { transform: translateX(calc(-110% + var(--drag-offset, 0px) + var(--hover-shift, 0px))) translateY(14px) rotateZ(-8deg) rotateY(-10deg) scale(.94); }
+  .slot-right { transform: translateX(calc(10% + var(--drag-offset, 0px) + var(--hover-shift, 0px))) translateY(14px) rotateZ(8deg) rotateY(10deg) scale(.94); }
+  .product-category-caption { font-size: 17px; }
+}
+@media(max-width:600px) {
+  .product-dialog:has(> .product-carousel) > h2 { min-width: 112px; min-height: 44px; padding: 10px 16px; font-size: 12px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .product-carousel.is-returning, .product-dialog:has(> .product-carousel.is-returning) > h2 { animation: none; }
+  .product-carousel-slot, .product-category-card, .product-category-card img, .carousel-dot, .carousel-dot span { transition: none; }
+  .product-category-caption, .project-dialog[open], .project-dialog[open]::backdrop, .project-dialog[open].is-closing, .project-dialog[open].is-closing::backdrop { animation: none; }
+}

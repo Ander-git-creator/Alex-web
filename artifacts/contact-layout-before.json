@@ -1,0 +1,56 @@
+{
+  "390": {
+    ".contact-headline h2": {
+      "width": 350,
+      "height": 80.859375,
+      "font": "28.08px"
+    },
+    ".contact-card": {
+      "width": 350,
+      "height": 407.15625,
+      "font": "16px"
+    },
+    ".contact-title-line:nth-child(1)": {
+      "width": 350,
+      "height": 26.953125,
+      "font": "28.08px"
+    },
+    ".contact-title-line:nth-child(2)": {
+      "width": 350,
+      "height": 26.953125,
+      "font": "28.08px"
+    },
+    ".contact-title-line:nth-child(3)": {
+      "width": 350,
+      "height": 26.953125,
+      "font": "28.08px"
+    }
+  },
+  "1440": {
+    ".contact-headline h2": {
+      "width": 600.3125,
+      "height": 219.75,
+      "font": "76.32px"
+    },
+    ".contact-card": {
+      "width": 268.921875,
+      "height": 309.59375,
+      "font": "16px"
+    },
+    ".contact-title-line:nth-child(1)": {
+      "width": 600.3125,
+      "height": 73.25,
+      "font": "76.32px"
+    },
+    ".contact-title-line:nth-child(2)": {
+      "width": 600.3125,
+      "height": 73.25,
+      "font": "76.32px"
+    },
+    ".contact-title-line:nth-child(3)": {
+      "width": 600.3125,
+      "height": 73.25,
+      "font": "76.32px"
+    }
+  }
+}

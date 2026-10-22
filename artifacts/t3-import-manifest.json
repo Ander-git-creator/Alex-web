@@ -1,0 +1,106 @@
+[
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\01功能板.png",
+    "output": "wide-feature.webp",
+    "size": [
+      1464,
+      1200
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\02AUD.png",
+    "output": "wide-01.webp",
+    "size": [
+      1464,
+      600
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\035.0.png",
+    "output": "wide-02.webp",
+    "size": [
+      1464,
+      600
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\04 1000mah.png",
+    "output": "wide-03.webp",
+    "size": [
+      1464,
+      600
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\05 8人连接.png",
+    "output": "wide-04.webp",
+    "size": [
+      1464,
+      600
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\06 EQ.png",
+    "output": "wide-05.webp",
+    "size": [
+      1464,
+      600
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\07ip67.png",
+    "output": "wide-06.webp",
+    "size": [
+      1464,
+      600
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\1000mah.png",
+    "output": "square-01.webp",
+    "size": [
+      1500,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\8人.png",
+    "output": "square-02.webp",
+    "size": [
+      1500,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\EQ.png",
+    "output": "square-03.webp",
+    "size": [
+      1500,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\双芯片.png",
+    "output": "square-04.webp",
+    "size": [
+      1500,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\降噪.png",
+    "output": "square-05.webp",
+    "size": [
+      1500,
+      1500
+    ]
+  },
+  {
+    "source": "D:\\作品整理\\T3\\新版本\\主图A+\\音乐分享.png",
+    "output": "square-06.webp",
+    "size": [
+      1500,
+      1500
+    ]
+  }
+]

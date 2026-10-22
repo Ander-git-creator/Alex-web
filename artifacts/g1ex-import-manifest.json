@@ -1,0 +1,101 @@
+[
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\2.png",
+    "output": "square-01.webp",
+    "size": [
+      1600,
+      1600
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\3.png",
+    "output": "square-02.webp",
+    "size": [
+      1600,
+      1600
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\4.png",
+    "output": "square-03.webp",
+    "size": [
+      1600,
+      1600
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\5.png",
+    "output": "square-04.webp",
+    "size": [
+      1600,
+      1600
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\6.png",
+    "output": "square-05.webp",
+    "size": [
+      1600,
+      1600
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\7.png",
+    "output": "square-06.webp",
+    "size": [
+      1600,
+      1600
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\A+1-2.png",
+    "output": "wide-01.webp",
+    "size": [
+      1464,
+      1200
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\A+3.png",
+    "output": "wide-02.webp",
+    "size": [
+      1464,
+      600
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\A+4-5.png",
+    "output": "wide-03.webp",
+    "size": [
+      1464,
+      1200
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\A+6.png",
+    "output": "wide-04.webp",
+    "size": [
+      1464,
+      600
+    ],
+    "region": null
+  },
+  {
+    "source": "D:\\作品整理\\G1EX\\新版本\\主图A+\\应用场景.png",
+    "output": "wide-05.webp",
+    "size": [
+      1464,
+      600
+    ],
+    "region": null
+  }
+]
