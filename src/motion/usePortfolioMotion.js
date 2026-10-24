@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './portfolio-motion.css';
@@ -10,7 +10,6 @@ const CLOSED = 'inset(0% 0% 100% 0%)';
 const RELEASE = 'transform,clipPath,willChange';
 
 export default function usePortfolioMotion(rootRef) {
-  const opened = useRef(false);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -25,79 +24,7 @@ export default function usePortfolioMotion(rootRef) {
       // Register asynchronous callbacks with the same React cleanup context.
       const safe = fn => (...args) => context.add(() => fn(...args));
       const headingTimelines = new Map();
-      let openingCancelled = false;
-      let openingFrame = 0;
       const release = targets => gsap.set(targets, { clearProps: RELEASE });
-      const deepLink = location.hash && location.hash !== '#home';
-      const opening = gsap.timeline({
-        paused: true,
-        defaults: { ease: 'expo.out' },
-        onComplete: () => {
-          opened.current = true;
-          root.dataset.opening = 'complete';
-          root.dataset.sceneReady = 'true';
-        },
-      });
-
-      if (!opened.current && !deepLink && window.scrollY < window.innerHeight * 0.4) {
-        root.dataset.opening = 'playing';
-        gsap.set('.opening-curtain', { autoAlpha: 1 });
-        opening
-          .from('.opening-char', { yPercent: 115, force3D: true, duration: 1.2, stagger: 0.035 }, 0.08)
-          .from('.opening-rule', { scaleX: 0, transformOrigin: 'left', duration: 1.25, ease: 'power3.inOut' }, 0.15)
-          .to('.opening-char', { yPercent: -115, stagger: 0.018, duration: 0.7, ease: 'power3.in' }, 1.08)
-          .to('.opening-curtain', { yPercent: -100, duration: 1.5, ease: 'expo.inOut' }, 1.12)
-          .set('.opening-curtain', { autoAlpha: 0 }, 2.65)
-          .call(() => { root.dataset.sceneReady = 'true'; }, [], 2.65)
-          .from('.hero-background', { scale: 1.18, duration: 2.6, onComplete: () => release(select('.hero-background')) }, 1.1)
-          .from('.hero-title-line', {
-            yPercent: 140, x: -32, scaleY: 1.65, scaleX: 0.84,
-            skewY: 5, rotation: -2, transformOrigin: '0% 100%',
-            duration: 1.9, stagger: 0.22,
-            onComplete: () => release(select('.hero-title-line')),
-          }, 1.55)
-          .from('.hero-description > span', {
-            yPercent: 110, clipPath: CLOSED, duration: 1.3, stagger: 0.12,
-            onComplete: () => release(select('.hero-description > span')),
-          }, 2.15)
-          .from('.hero-gallery', {
-            y: 150, scale: 0.92, clipPath: CLOSED, duration: 1.85,
-            onComplete: () => release(select('.hero-gallery')),
-          }, 1.9)
-          .from('.navigation', {
-            y: -110, duration: 1.5,
-            onComplete: () => release(select('.navigation')),
-          }, 1.9);
-        // Avoid swapping the large font or compiling the gallery mid-word.
-        const fontReady = document.fonts?.load('500 100px "Rany Medium"') || Promise.resolve();
-        fontReady.catch(() => {}).then(() => {
-          if (openingCancelled || opened.current) return;
-          openingFrame = requestAnimationFrame(() => {
-            openingFrame = requestAnimationFrame(() => {
-              if (!openingCancelled && !opened.current) opening.play();
-            });
-          });
-        });
-      } else {
-        gsap.set('.opening-curtain', { autoAlpha: 0 });
-        root.dataset.opening = 'complete';
-        root.dataset.sceneReady = 'true';
-      }
-
-      // Scrolling and navigation finish the opening without locking the page.
-      const finishOpening = () => {
-        if (root.dataset.opening === 'playing') opening.progress(1).pause();
-      };
-      const onKey = event => {
-        if (['Tab', 'Escape', 'ArrowDown', 'PageDown', 'End', ' '].includes(event.key)) finishOpening();
-      };
-      const onNavigation = event => {
-        if (event.target.closest('a[href^="#"]')) finishOpening();
-      };
-      window.addEventListener('wheel', finishOpening, { passive: true });
-      window.addEventListener('touchstart', finishOpening, { passive: true });
-      window.addEventListener('keydown', onKey);
-      root.addEventListener('click', onNavigation);
 
       select('.section-heading').forEach(heading => {
         if (headingsPlayed.has(heading)) return;
@@ -228,19 +155,8 @@ export default function usePortfolioMotion(rootRef) {
       });
       root.addEventListener('focusin', onFocus);
       return () => {
-        openingCancelled = true;
-        cancelAnimationFrame(openingFrame);
-        window.removeEventListener('wheel', finishOpening);
-        window.removeEventListener('touchstart', finishOpening);
-        window.removeEventListener('keydown', onKey);
-        root.removeEventListener('click', onNavigation);
         root.removeEventListener('focusin', onFocus);
       };
-    });
-
-    media.add('(prefers-reduced-motion: reduce)', () => {
-      root.dataset.opening = 'complete';
-      root.dataset.sceneReady = 'true';
     });
 
     // Nest movement separately from reveal, image zoom and card interactions.

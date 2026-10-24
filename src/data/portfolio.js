@@ -28,7 +28,7 @@ export const profile = {
   intro: '我把视觉系统、品牌叙事和 AI 工作流，连接成能够落地的设计表达。擅长从 0 到 1 搭建风格方向，让品牌、产品与电商视觉更有记忆点，也更具商业价值。',
   phone: '136******81', wechat: 'mer**ex', email: 'xf.chan@outlook.com',
   contactReady: true,
-  avatar: { src: '/assets/about-holo-portrait.png' },
+  avatar: { src: '/assets/about-holo-portrait.webp' },
   hero: {
     videos: ['/assets/hero-video-1.mp4', '/assets/hero-video-2.mp4'],
   },
@@ -36,13 +36,13 @@ export const profile = {
   building: ['品牌视觉系统', 'AIGC 视觉工作流', '短视频封面体系', '电商营销视觉'],
 };
 export const galleryItems = [
-  'rh_15fb3a1fb422.png',
-  'rh_8e1f64542d0f.png',
-  'rh_a65200503877.png',
-  'rh_c798fa4a2e83.png',
-  'rh_c798fa4a2e832.png',
-  'WEB 渲染海报封面.png',
-  'WEB三维渲染 封面.png',
+  'rh_15fb3a1fb422.webp',
+  'rh_8e1f64542d0f.webp',
+  'rh_a65200503877.webp',
+  'rh_c798fa4a2e83.webp',
+  'rh_c798fa4a2e832.webp',
+  'WEB 渲染海报封面.webp',
+  'WEB三维渲染 封面.webp',
 ].map((file, index) => ({
   id: file,
   image: `/assets/hero-gallery/${encodeURIComponent(file)}`,
@@ -50,9 +50,9 @@ export const galleryItems = [
   alt: `视觉作品 ${index + 1}`,
 }));
 export const projects = [
-  { id: 'product', title: '3D产品视觉', en: 'PRODUCT & STILL LIFE', tags: '电商视觉 / 三维渲染 / 材质光影', media: { src: '/assets/work-product-custom.png' }, description: '以鲜明色彩和材质语言，探索产品的视觉识别。通过场景、灯光与构图，让商品信息变得清晰而富有吸引力。', gallery: [artwork.coffee,artwork.botanical,artwork.amber] },
-  { id: 'space', title: 'AI赋能', en: 'IMAGINATION IN SPACE', tags: '风格探索 / 品牌表达 / 视觉叙事', media: { src: '/assets/cover-ai-kitchen.png' }, description: '从色彩和情绪出发，构建充满想象力的视觉空间，让每个场景都有自己的故事。', gallery: [artwork.pastel,artwork.music,artwork.home] },
-  { id: 'brand', title: '动效与动画', en: 'BRAND & E-COMMERCE', tags: '动态视觉 / 三维动画 / 动态光影', media: { src: '/assets/work-motion-t2-galaxy.png' }, description: '融合动态视觉与三维动画，以光影、节奏和运动建立更具感染力的视觉表达。', gallery: [artwork.perfume,artwork.amber,artwork.botanical] },
+  { id: 'product', title: '3D产品视觉', en: 'PRODUCT & STILL LIFE', tags: '电商视觉 / 三维渲染 / 材质光影', media: { src: '/assets/work-product-custom.webp' }, description: '以鲜明色彩和材质语言，探索产品的视觉识别。通过场景、灯光与构图，让商品信息变得清晰而富有吸引力。', gallery: [artwork.coffee,artwork.botanical,artwork.amber] },
+  { id: 'space', title: 'AI赋能', en: 'IMAGINATION IN SPACE', tags: '风格探索 / 品牌表达 / 视觉叙事', media: { src: '/assets/cover-ai-kitchen.webp' }, description: '从色彩和情绪出发，构建充满想象力的视觉空间，让每个场景都有自己的故事。', gallery: [artwork.pastel,artwork.music,artwork.home] },
+  { id: 'brand', title: '动效与动画', en: 'BRAND & E-COMMERCE', tags: '动态视觉 / 三维动画 / 动态光影', media: { src: '/assets/work-motion-t2-galaxy.webp' }, description: '融合动态视觉与三维动画，以光影、节奏和运动建立更具感染力的视觉表达。', gallery: [artwork.perfume,artwork.amber,artwork.botanical] },
 ];
 export const career = [
   { date: '2023.06-2026.03', company: '深圳市城市行科技有限公司', role: '跨境电商/视觉设计师', description: '负责品牌视觉，AI设计项目主导，多站点跨境平台电商营销图与产品包装说明书。' },

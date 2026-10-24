@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './EcommerceGallery.css';
 
-export default function EcommerceGallery({ item, format, onBack, showBack = true, imageScale = 1 }) {
+export default function EcommerceGallery({ item, format, onBack, showBack = true, imageScale = 1, mobileImageScale = imageScale }) {
   // Temporary empty slots demonstrate scrolling until case images are supplied.
   // Replace with squareImages / wideImages on each case; dots follow their length.
   const images = item[`${format}Images`]?.length ? item[`${format}Images`] : Array.from({ length: 5 }, () => ({ src: null }));
@@ -12,11 +12,22 @@ export default function EcommerceGallery({ item, format, onBack, showBack = true
   const gesture = useRef(null);
   const suppressClick = useRef(false);
   const imageButtons = useRef([]);
+  const scrollFrame = useRef(0);
+  const stackStyles = useRef([]);
+  useEffect(() => () => cancelAnimationFrame(scrollFrame.current), []);
+  function scheduleStack() {
+    if (scrollFrame.current) return;
+    scrollFrame.current = requestAnimationFrame(() => {
+      scrollFrame.current = 0;
+      updateStack();
+    });
+  }
   const title = `${item.label} · ${format === 'square' ? '方图' : '横图'}`;
 
-  function getStep() { return viewport.current.querySelector('.ecommerce-gallery-slide').offsetHeight; }
+  function getStep() { return viewport.current?.querySelector('.ecommerce-gallery-slide')?.offsetHeight || 1; }
   function updateStack() {
     const el = viewport.current;
+    if (!el) return;
     const progress = el.scrollTop / getStep();
     setActive(Math.max(0, Math.min(images.length - 1, Math.round(progress))));
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -24,6 +35,14 @@ export default function EcommerceGallery({ item, format, onBack, showBack = true
       if (!button) return;
       const offset = Math.max(-2, Math.min(2, index - progress));
       const distance = Math.abs(offset);
+      // Distant cards share a fixed pose; avoid rewriting their compositor
+      // styles on every scroll frame, especially for animated artwork.
+      const pose = `${reduced}-${offset}`;
+      const previous = stackStyles.current[index];
+      if (previous?.button === button && previous.pose === pose) return;
+      stackStyles.current[index] = { button, pose };
+      button.style.visibility = distance < 2 ? 'visible' : 'hidden';
+      button.style.willChange = distance < 2 ? 'transform' : 'auto';
       button.style.transform = reduced ? 'none' : `translateZ(${-distance * 140}px) rotateX(${offset * -34}deg) scale(${1 - distance * .06})`;
       button.style.filter = `brightness(${1 - Math.min(distance, 2) * .2})`;
       button.parentElement.style.zIndex = String(100 - Math.round(distance * 30));
@@ -31,12 +50,13 @@ export default function EcommerceGallery({ item, format, onBack, showBack = true
   }
   useEffect(() => {
     const el = viewport.current;
+    const mobile = window.matchMedia('(max-width: 760px)');
     const measure = () => {
       const oldStep = parseFloat(el.style.getPropertyValue('--gallery-step'));
-      const index = oldStep ? Math.round(el.scrollTop / oldStep) : 0;
+      const progress = oldStep ? el.scrollTop / oldStep : 0;
       const ratios = images.map((image, index) => image.cardAspectRatio || imageRatios[index] || image.aspectRatio || (format === 'square' ? 1 : 2.44));
       // Use one width for the stack, allowing taller A+ artwork to fill the viewport.
-      const width = Math.min(el.clientWidth - 40, format === 'square' ? 800 : 1200, el.clientHeight * (format === 'square' ? .62 : .94) * Math.min(...ratios)) * imageScale;
+      const width = Math.min(el.clientWidth - 40, format === 'square' ? 800 : 1200, el.clientHeight * (format === 'square' ? .62 : .94) * Math.min(...ratios)) * (mobile.matches ? mobileImageScale : imageScale);
       imageButtons.current.forEach((button, index) => {
         if (!button) return;
         const ratio = ratios[index];
@@ -44,15 +64,19 @@ export default function EcommerceGallery({ item, format, onBack, showBack = true
         button.style.setProperty('--gallery-card-height', `${width / ratio}px`);
       });
       // Keep the original overlap based on the shorter cards, even with a tall cover.
-      el.style.setProperty('--gallery-step', `${Math.round(width / Math.max(...ratios) * .68)}px`);
-      el.scrollTop = index * getStep();
+      const nextStep = Math.max(1, Math.round(width / Math.max(...ratios) * .68));
+      if (oldStep !== nextStep) {
+        el.style.setProperty('--gallery-step', `${nextStep}px`);
+        el.scrollTop = progress * getStep();
+      }
       updateStack();
     };
     const observer = new ResizeObserver(measure);
     observer.observe(el);
+    mobile.addEventListener('change', measure);
     measure();
-    return () => observer.disconnect();
-  }, [format, images.length, imageRatios, imageScale]);
+    return () => { observer.disconnect(); mobile.removeEventListener('change', measure); };
+  }, [format, images.length, imageRatios, imageScale, mobileImageScale]);
 
   useEffect(() => { (showBack ? back.current : viewport.current)?.focus({ preventScroll: true }); }, [showBack]);
 
@@ -75,7 +99,7 @@ export default function EcommerceGallery({ item, format, onBack, showBack = true
   return <section className={`ecommerce-gallery ecommerce-gallery--${format}`} aria-label={title}>
     {showBack && <button type="button" ref={back} className="ecommerce-gallery-back" onClick={onBack}>← 返回案例</button>}
     <div className="ecommerce-gallery-viewport" ref={viewport} tabIndex={0} aria-label={`${title}，上下滑动浏览`}
-      onScroll={updateStack}
+      onScroll={scheduleStack}
       onKeyDown={event => {
         if (!['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End'].includes(event.key)) return;
         event.preventDefault();
@@ -96,7 +120,15 @@ export default function EcommerceGallery({ item, format, onBack, showBack = true
       {images.map((image, index) => <div className="ecommerce-gallery-slide" key={`${image.src}-${index}`}>
         <button type="button" className="ecommerce-gallery-image" ref={el => { imageButtons.current[index] = el; }} aria-label={`查看${item.label}第${index + 1}张图片`}
           onClick={() => { if (!suppressClick.current && index !== active) goTo(index); }}>
-          {image.src ? <img src={image.src} alt={image.alt || item.label} draggable={false} onLoad={event => { const ratio = event.currentTarget.naturalWidth / event.currentTarget.naturalHeight; setImageRatios(previous => previous[index] === ratio ? previous : { ...previous, [index]: ratio }); }}/> : <span className="ecommerce-gallery-placeholder" aria-label="图片待添加"/>}
+          {image.src ? <picture>
+            {image.mobileSrc && <source media="(max-width: 760px)" srcSet={Math.abs(index - active) <= 1 ? image.mobileSrc : undefined}/>}
+            <img src={Math.abs(index - active) <= 1 ? image.src : undefined} decoding="async" alt={image.alt || item.label} draggable={false} onLoad={event => {
+            // Known artwork dimensions already reserve its space. Decoding
+            // must not trigger another measurement while a finger is scrolling.
+            if (image.cardAspectRatio || image.aspectRatio) return;
+            const ratio = event.currentTarget.naturalWidth / event.currentTarget.naturalHeight;
+            if (Number.isFinite(ratio) && ratio > 0) setImageRatios(previous => previous[index] === ratio ? previous : { ...previous, [index]: ratio });
+          }}/></picture> : <span className="ecommerce-gallery-placeholder" aria-label="图片待添加"/>}
         </button>
       </div>)}
     </div>

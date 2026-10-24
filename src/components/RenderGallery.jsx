@@ -4,9 +4,9 @@ import LatticeLoader from './LatticeLoader';
 import './RenderGallery.css';
 import { renderPosters } from '../data/renderPosters';
 const renders = [
-  { src: '/assets/work-product-custom.png', alt: '文具产品三维渲染', title: '产品阵列', subtitle: '三维渲染 / 产品构图' },
-  { src: '/assets/work-motion-custom.png', alt: '登山扣材质光影渲染', title: '材质与光影', subtitle: '三维渲染 / 金属质感' },
-  { src: '/assets/work-ai-custom.png', alt: '扫地机器人空间视觉', title: '产品场景', subtitle: '三维视觉 / 空间表达' },
+  { src: '/assets/work-product-custom.webp', alt: '文具产品三维渲染', title: '产品阵列', subtitle: '三维渲染 / 产品构图' },
+  { src: '/assets/work-motion-custom.webp', alt: '登山扣材质光影渲染', title: '材质与光影', subtitle: '三维渲染 / 金属质感' },
+  { src: '/assets/work-ai-custom.webp', alt: '扫地机器人空间视觉', title: '产品场景', subtitle: '三维视觉 / 空间表达' },
 ];
 
 export default function RenderGallery({ onBack, variant = 'render', items, groups, label, backLabel = '返回分类', showBack = true, fit }) {

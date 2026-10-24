@@ -1,0 +1,122 @@
+[
+  {
+    "source": "04235eb5-6b5c-41ba-b0b2-95a911d6ce49.png",
+    "output": "robot-vacuum-01.webp",
+    "sourceBytes": 1954652,
+    "outputBytes": 134114,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "1db5be2b-928f-48c0-a889-3f8947337683.png",
+    "output": "robot-vacuum-02.webp",
+    "sourceBytes": 1640426,
+    "outputBytes": 69836,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "20868dfe-2c96-4b55-94d3-8f5b6a9a86ca.png",
+    "output": "robot-vacuum-03.webp",
+    "sourceBytes": 1659155,
+    "outputBytes": 104654,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "284e134a-076e-4fdb-ae26-73b420d18a83.png",
+    "output": "robot-vacuum-04.webp",
+    "sourceBytes": 2268174,
+    "outputBytes": 195532,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "2bebac92-d206-4b7f-ade5-b3f65166ce5d.png",
+    "output": "robot-vacuum-05.webp",
+    "sourceBytes": 2889085,
+    "outputBytes": 343822,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "31be961d-3317-4729-b170-f2efde2056f4.png",
+    "output": "robot-vacuum-06.webp",
+    "sourceBytes": 1582717,
+    "outputBytes": 79172,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "5dfcdc31-3dba-4984-9541-55fd1578a07c.png",
+    "output": "robot-vacuum-07.webp",
+    "sourceBytes": 1849483,
+    "outputBytes": 113212,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "a9123b6d-3e9c-4156-9898-8ccc38b6423d.png",
+    "output": "robot-vacuum-08.webp",
+    "sourceBytes": 2770897,
+    "outputBytes": 294424,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "b3b2a728-03a8-4885-bb8e-745e35bc7bea.png",
+    "output": "robot-vacuum-09.webp",
+    "sourceBytes": 1539958,
+    "outputBytes": 46458,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "b3b2a728-03a8-4885-bb8e-745e35bc7beav.png",
+    "output": "robot-vacuum-10.webp",
+    "sourceBytes": 1609357,
+    "outputBytes": 95496,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "d0091c24-ab63-4631-b6c8-d3287e85e042.png",
+    "output": "robot-vacuum-11.webp",
+    "sourceBytes": 2088112,
+    "outputBytes": 186682,
+    "sourceSize": [
+      1672,
+      941
+    ]
+  },
+  {
+    "source": "fb31ee2b-8517-4013-8052-08c82a842f5d2.png",
+    "output": "robot-vacuum-12.webp",
+    "sourceBytes": 5533233,
+    "outputBytes": 262550,
+    "sourceSize": [
+      2752,
+      1536
+    ]
+  }
+]

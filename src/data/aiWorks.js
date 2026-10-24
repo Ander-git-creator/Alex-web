@@ -141,6 +141,72 @@ export const aiWorkGroups = [
         "title": "头盔蓝牙耳机 · 头盔展示"
       }
     ]
+  },
+  {
+    "id": "robot-vacuum",
+    "label": "扫地机器人",
+    "items": [
+      {
+        "src": "/assets/ai-works/robot-vacuum-01.webp",
+        "alt": "扫地机器人 · AI场景 01",
+        "title": "扫地机器人 · AI场景 01"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-02.webp",
+        "alt": "扫地机器人 · AI场景 02",
+        "title": "扫地机器人 · AI场景 02"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-03.webp",
+        "alt": "扫地机器人 · AI场景 03",
+        "title": "扫地机器人 · AI场景 03"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-04.webp",
+        "alt": "扫地机器人 · AI场景 04",
+        "title": "扫地机器人 · AI场景 04"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-05.webp",
+        "alt": "扫地机器人 · AI场景 05",
+        "title": "扫地机器人 · AI场景 05"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-06.webp",
+        "alt": "扫地机器人 · AI场景 06",
+        "title": "扫地机器人 · AI场景 06"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-07.webp",
+        "alt": "扫地机器人 · AI场景 07",
+        "title": "扫地机器人 · AI场景 07"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-08.webp",
+        "alt": "扫地机器人 · AI场景 08",
+        "title": "扫地机器人 · AI场景 08"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-09.webp",
+        "alt": "扫地机器人 · AI场景 09",
+        "title": "扫地机器人 · AI场景 09"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-10.webp",
+        "alt": "扫地机器人 · AI场景 10",
+        "title": "扫地机器人 · AI场景 10"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-11.webp",
+        "alt": "扫地机器人 · AI场景 11",
+        "title": "扫地机器人 · AI场景 11"
+      },
+      {
+        "src": "/assets/ai-works/robot-vacuum-12.webp",
+        "alt": "扫地机器人 · AI场景 12",
+        "title": "扫地机器人 · AI场景 12"
+      }
+    ]
   }
 ];
 

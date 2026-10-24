@@ -736,7 +736,7 @@ const CircularGallery = ({
 
     const frame = now => {
       raf = 0;
-      if (!visible || document.hidden) return;
+      if ((!visible && initialReady) || document.hidden) return;
       const s = settingsRef.current;
       const dt = last ? clamp((now - last) / 1000, 0.0005, 0.05) : 1 / 60;
       last = now;
@@ -843,7 +843,9 @@ const CircularGallery = ({
     };
 
     function wake() {
-      if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame);
+      // The page loader waits for texture upload. Finish that preparation
+      // even when scroll restoration puts the hero outside the viewport.
+      if (!raf && (visible || !initialReady) && !document.hidden) raf = requestAnimationFrame(frame);
     }
 
     const resize = () => {
@@ -1066,7 +1068,7 @@ const CircularGallery = ({
     resizeObserver.observe(container);
     const intersection = new IntersectionObserver(entries => {
       visible = entries.some(entry => entry.isIntersecting);
-      if (visible) {
+      if (visible || !initialReady) {
         last = 0;
         wake();
       }

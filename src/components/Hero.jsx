@@ -10,21 +10,30 @@ export default function Hero() {
   const scene = useRef(0);
   const [phase, setPhase] = useState('intro');
   const [galleryReady, setGalleryReady] = useState(false);
+  const [mobileVideo, setMobileVideo] = useState(() => window.matchMedia('(max-width: 760px)').matches);
+  const poster = mobileVideo ? '/assets/hero-poster.webp' : '/assets/hero-poster-desktop.webp';
+  const [videoEnabled] = useState(() => !navigator.connection?.saveData &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  useEffect(() => {
+    const viewport = window.matchMedia('(max-width: 760px)');
+    const update = () => setMobileVideo(viewport.matches);
+    viewport.addEventListener('change', update);
+    update();
+    return () => viewport.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
     const root = background.current?.closest('.portfolio-root');
     if (!root) return undefined;
     const ready = () => {
-      if (root.dataset.sceneReady === 'true') {
+      if (root.dataset.preloading === 'true' || root.dataset.sceneReady === 'true') {
         setGalleryReady(true);
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          videos.current[scene.current]?.play().catch(() => {});
-        }
         observer.disconnect();
       }
     };
     const observer = new MutationObserver(ready);
-    observer.observe(root, { attributes: true, attributeFilter: ['data-scene-ready'] });
+    observer.observe(root, { attributes: true, attributeFilter: ['data-scene-ready', 'data-preloading'] });
     ready();
     return () => observer.disconnect();
   }, []);
@@ -40,6 +49,11 @@ export default function Hero() {
     let nextPlayer;
     let pendingScene = null;
     let switchVersion = 0;
+    const recoveryTimers = new Set();
+    const clearRecovery = () => {
+      recoveryTimers.forEach(clearTimeout);
+      recoveryTimers.clear();
+    };
 
     const cancelSwitch = () => {
       switchVersion += 1;
@@ -76,7 +90,7 @@ export default function Hero() {
     };
 
     const changeScene = index => {
-      if (switching || disposed || document.hidden || motion.matches) return;
+      if (switching || disposed || motion.matches || !videoEnabled) return;
       switching = true;
       const version = ++switchVersion;
       pendingScene = index;
@@ -107,22 +121,23 @@ export default function Hero() {
     };
     const syncMotion = () => {
       if (disposed) return;
-      if (document.hidden || motion.matches) {
+      if (!videoEnabled) return;
+      if (motion.matches) {
         cancelSwitch();
         players.forEach(player => player.pause());
         return;
       }
+      // Do not pause a running clip when a browser tab becomes hidden.
+      // The browser may suspend media itself; recover when it becomes visible.
+      if (document.hidden) return;
       if (background.current?.closest('.portfolio-root')?.dataset.sceneReady !== 'true') return;
       if (switching) return;
       const player = players[scene.current];
       if (player.ended && scene.current === 0) changeScene(1);
       else player.play().catch(() => {});
     };
-    const suspend = () => {
-      cancelSwitch();
-      players.forEach(player => player.pause());
-    };
     const resume = () => {
+      if (disposed || document.hidden) return;
       // Background tabs and the back/forward cache can suspend a decoder
       // during a cut. Re-register its frame callback when the page returns.
       const target = pendingScene;
@@ -130,18 +145,46 @@ export default function Hero() {
       if (target !== null) players[target].pause();
       syncMotion();
     };
-    const onVisibility = () => document.hidden ? suspend() : resume();
+    const recover = () => {
+      clearRecovery();
+      if (disposed || document.hidden) return;
+      resume();
+      // Embedded browsers may restore their media pipeline after visibility
+      // and focus events. Retry without seeking or reloading the source.
+      [250, 1000, 2500].forEach(delay => {
+        const timer = setTimeout(() => {
+          recoveryTimers.delete(timer);
+          if (!disposed && !document.hidden) syncMotion();
+        }, delay);
+        recoveryTimers.add(timer);
+      });
+    };
+    const onVisibility = () => document.hidden ? clearRecovery() : recover();
+    const onPause = event => {
+      if (disposed || document.hidden || motion.matches || !videoEnabled) return;
+      if (event.target === players[scene.current] && !event.target.ended) recover();
+    };
+    const readyObserver = new MutationObserver(syncMotion);
+    readyObserver.observe(background.current.closest('.portfolio-root'), {
+      attributes: true, attributeFilter: ['data-scene-ready'],
+    });
     players.forEach(player => {
       player.addEventListener('ended', ended);
+      player.addEventListener('pause', onPause);
+      player.addEventListener('canplay', start);
     });
     players[0].addEventListener('loadeddata', start);
     motion.addEventListener('change', syncMotion);
     document.addEventListener('visibilitychange', onVisibility);
-    window.addEventListener('pagehide', suspend);
-    window.addEventListener('pageshow', resume);
-    window.addEventListener('focus', resume);
+    window.addEventListener('pagehide', clearRecovery);
+    window.addEventListener('pageshow', recover);
+    window.addEventListener('focus', recover);
+    window.addEventListener('pointerdown', recover, { passive: true });
+    document.addEventListener('resume', recover);
     scene.current = 0;
+    setPhase('intro');
     players.forEach((player, index) => {
+      player.style.opacity = index === 0 ? '1' : '0';
       player.muted = true;
       player.loop = index === 1;
     });
@@ -149,31 +192,35 @@ export default function Hero() {
 
     return () => {
       disposed = true;
+      clearRecovery();
+      readyObserver.disconnect();
       cancelSwitch();
       players.forEach(player => {
         player.removeEventListener('ended', ended);
+        player.removeEventListener('pause', onPause);
+        player.removeEventListener('canplay', start);
         player.pause();
       });
       players[0].removeEventListener('loadeddata', start);
       motion.removeEventListener('change', syncMotion);
       document.removeEventListener('visibilitychange', onVisibility);
-      window.removeEventListener('pagehide', suspend);
-      window.removeEventListener('pageshow', resume);
-      window.removeEventListener('focus', resume);
+      window.removeEventListener('pagehide', clearRecovery);
+      window.removeEventListener('pageshow', recover);
+      window.removeEventListener('focus', recover);
+      window.removeEventListener('pointerdown', recover);
+      document.removeEventListener('resume', recover);
     };
-  }, []);
+  }, [videoEnabled, mobileVideo]);
 
   return <section id="home" className="hero" data-scene={phase}>
-    <div className="opening-curtain" aria-hidden="true">
-      <div className="opening-meta"><span>INDEPENDENT DESIGNER</span><span>VISUAL / BRAND / AI</span></div>
-      <div className="opening-word">{Array.from('XIAOFENG').map((letter, i) => <span className="opening-char" key={i}>{letter}</span>)}</div>
-      <div className="opening-footer"><span>DESIGN IN MOTION</span><div className="opening-rule"/><span>↗</span></div>
-    </div>
     <div className="hero-scene">
     <div ref={background} className="hero-background" aria-label="云端创作空间动态背景">
-      {scenes.map((src, index) => <video key={src}
+      <img className="hero-poster" src={poster} alt="" fetchPriority="high" decoding="async" aria-hidden="true"/>
+      {scenes.map((src, index) => <video key={`${src}-${mobileVideo}`}
         ref={element => { videos.current[index] = element; }}
-        src={src} muted playsInline preload="auto"
+        src={videoEnabled ? (mobileVideo ? src.replace('.mp4', '-mobile-hq.mp4') : src) : undefined}
+        muted playsInline preload="none"
+        poster={index === 0 ? poster : undefined}
         style={{ opacity: index === 0 ? 1 : 0 }} aria-hidden="true"/>)}
     </div>
     </div>
@@ -186,7 +233,13 @@ export default function Hero() {
       <p className="hero-description"><span>用视觉系统与 AI 工作流</span><span>让品牌内容更快、更准、更有辨识度</span></p>
     </div>
     <div className="hero-gallery">{galleryReady && <CircularGallery
+      waitForReady
+      onLoadStateChange={({ status }) => {
+        const root = background.current?.closest('.portfolio-root');
+        if (root) root.dataset.galleryReady = status;
+      }}
       items={galleryItems}
+      dpr={1.5}
       bend={2.5}
       itemSize={0.4}
       fadeEdges={0.3}

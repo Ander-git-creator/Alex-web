@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { strengths } from '../data/portfolio';
 import SectionHeading from './SectionHeading';
@@ -16,11 +16,17 @@ function CardHeading({ item, index }) {
 
 function StrengthCard({ item, index }) {
   const [flipped, setFlipped] = useState(false);
+  useEffect(() => {
+    if (!flipped || !window.matchMedia('(max-width: 760px), (hover: none)').matches) return;
+    const timer = setTimeout(() => setFlipped(false), 4000);
+    return () => clearTimeout(timer);
+  }, [flipped]);
   const reduceMotion = useReducedMotion();
   const angles = index === 1 || index === 4 ? [6, -7, 5] : [-6, 6, -3];
 
   return <FlipCard
     className={`strength-flip strength-flip-${index}`}
+    flipped={flipped}
     onFlipChange={setFlipped}
     resetOnPointerLeave
     axis="y"

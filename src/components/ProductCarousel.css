@@ -11,6 +11,13 @@
 }
 .product-dialog::backdrop { background: #03060566; backdrop-filter: blur(22px); }
 .product-dialog[open] { display: flex; flex-direction: column; justify-content: center; }
+.product-dialog > .project-dialog-loading {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  margin: 0; padding: 24px;
+  text-align: center; color: var(--muted); font-size: 15px; line-height: 1.8;
+  pointer-events: none;
+}
 .product-dialog .dialog-close { position: fixed; top: 24px; right: 30px; width: 44px; height: 44px; font-size: 28px; color: #ffffffab; border: 1px solid #ffffff18; border-radius: 50%; background: #ffffff05; z-index: 10; }
 .product-dialog .dialog-close:hover { color: #fff; background: #ffffff10; }
 .product-dialog h2 { flex-shrink: 0; text-align: center; font-size: clamp(20px, 2vw, 28px); font-weight: 500; margin: 0 0 24px; letter-spacing: .02em; }

@@ -80,6 +80,10 @@ export default function FlipCard({
   const turnY = useMotionTemplate`perspective(${perspective}px) scale(${lift}) rotateX(${tiltX}deg) rotateY(${sumY}deg)`;
   const turnX = useMotionTemplate`perspective(${perspective}px) scale(${lift}) rotateY(${tiltY}deg) rotateX(${sumX}deg)`;
   const facing = useTransform(turn, t => Math.abs(Math.cos((t * Math.PI) / 180)));
+  // Explicitly hide the outgoing face at the edge of the turn. Some mobile
+  // compositors otherwise keep transformed text visible through the back.
+  const frontVisibility = useTransform(turn, t => Math.cos(t * Math.PI / 180) > 0.001 ? 'visible' : 'hidden');
+  const backVisibility = useTransform(turn, t => Math.cos(t * Math.PI / 180) < -0.001 ? 'visible' : 'hidden');
   const spread = useTransform(facing, f => 0.08 + 0.92 * f);
   const shade = useTransform(facing, f => 0.1 + 0.9 * f * f);
   const gxPct = useMotionTemplate`${gx}%`;
@@ -272,11 +276,13 @@ export default function FlipCard({
         />
       ) : null}
       <motion.div className="flip-card__rotor" style={reduce ? undefined : transitionEffect === 'reveal' ? { scale: lift } : rotorStyle}>
-        <div className="flip-card__face flip-card__face--front" aria-hidden={shown} inert={shown}>
+        <motion.div className="flip-card__face flip-card__face--front" aria-hidden={shown} inert={shown}
+          style={!reduce && transitionEffect === 'flip' ? { visibility: frontVisibility } : undefined}>
           {front}
           {glare ? <span className="flip-card__glare" aria-hidden="true" /> : null}
-        </div>
+        </motion.div>
         <motion.div className="flip-card__face flip-card__face--back" aria-hidden={!shown} inert={!shown}
+          style={!reduce && transitionEffect === 'flip' ? { visibility: backVisibility } : undefined}
           initial={false}
           animate={transitionEffect === 'reveal' && !reduce ? { clipPath: shown ? 'circle(150% at 50% 100%)' : 'circle(0% at 50% 100%)' } : undefined}
           transition={{ duration: shown ? 0.32 : 0.26, ease: [0.22, 0.7, 0.3, 1] }}

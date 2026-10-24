@@ -5,9 +5,9 @@ import { renderWorks } from '../data/renderWorks';
 import './ProductCarousel.css';
 
 const items = [
-  { title: '三维渲染', src: '/assets/cover-3d-render.png' },
-  { title: '电商视觉案例', src: '/assets/cover-ecommerce-case.png' },
-  { title: '渲染海报', src: '/assets/cover-render-poster.png' },
+  { title: '三维渲染', src: '/assets/cover-3d-render.webp' },
+  { title: '电商视觉案例', src: '/assets/cover-ecommerce-case.webp' },
+  { title: '渲染海报', src: '/assets/cover-render-poster.webp' },
 ];
 
 // Overlapping covers fan out around the selected category.

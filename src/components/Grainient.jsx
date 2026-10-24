@@ -514,6 +514,11 @@ const Grainient = ({
     const frame = now => {
       raf = 0;
       if (!visible || document.hidden) return;
+      // This decorative background needs only 30 frames per second.
+      if (last && now - last < 1000 / 30) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
       const s = settingsRef.current;
       const dt = last ? clamp((now - last) / 1000, 0.001, 0.05) : 1 / 60;
       last = now;
@@ -551,11 +556,13 @@ const Grainient = ({
     };
 
     const onPointerMove = event => {
+      if (!settingsRef.current.interactive) return;
       locate(event);
       if (pointer.inside || trail.length) wake();
     };
 
     const onPointerDown = event => {
+      if (!settingsRef.current.clickSwirl) return;
       locate(event);
       const s = settingsRef.current;
       if (!pointer.inside || !s.clickSwirl || reduce) return;
